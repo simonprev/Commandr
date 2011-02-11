@@ -1,0 +1,11 @@
+sinatra --version '> 1.0'
+dm-core
+dm-validations
+dm-timestamps
+dm-migrations
+dm-postgres-adapter
+dm-sqlite-adapter
+dm-pager
+dm-types
+haml
+coderay

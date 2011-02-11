@@ -1,0 +1,34 @@
+%h1 #{@titre}
+- if !@feed.empty? 
+  - if @titre!="Dernières Activités"
+    - if @tri!="recent"
+      %a{:href=>"#{request.path}?tri=recent"}<
+        Récent
+    - else
+      %span<
+        Récent
+
+    - if @tri!="populaire"
+      %a{:href=>"#{request.path}?tri=populaire"}<
+        Populaire
+    - else
+      %span<
+        Populaire
+
+    - if @tri!="favoris"
+      %a{:href=>"#{request.path}?tri=favoris"}<
+        Favoris
+    - else
+      %span<
+        Favoris
+
+  = haml(:_feed_code, :layout => false)
+
+- else
+  %span.no-code Aucun code
+
+
+
+
+
+

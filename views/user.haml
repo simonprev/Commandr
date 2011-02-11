@@ -1,0 +1,72 @@
+%h1
+  = @user.username
+- if session["username"] && @user.username!=session["username"] && !@is_friend
+  %form{:action=>"#{request.path}", :method=>"post"}
+    %p
+      %input{:type=>"submit", :value=>"Suivre"}
+- else
+  - if @user.username!=session["username"] && session["username"]
+    %form{:action=>"#{request.path}", :method=>"post"}
+      %p
+        %input{:type=>"submit", :value=>"Ne plus suivre"}
+
+%h3<
+  Codes:
+
+- if !@feed.empty? 
+  - if @tri!="recent"
+    %a{:href=>"#{request.path}?tri=recent"}<
+      Récent
+  - else
+    %span<
+      Récent
+
+  - if @tri!="populaire"
+    %a{:href=>"#{request.path}?tri=populaire"}<
+      Populaire
+  - else
+    %span<
+      Populaire
+
+  - if @tri!="favoris"
+    %a{:href=>"#{request.path}?tri=favoris"}<
+      Favoris
+  - else
+    %span<
+      Favoris
+
+  = haml(:_feed_code, :layout => false)
+- else
+  Aucun code
+
+
+
+%h3<
+  Abonnements:
+%ul
+  - @user.friends.each do |user|
+    %li
+      %strong
+        %a{:href=>"/user/#{user.username}"}
+          #{user.username}
+      %span
+        Dernier code: #{distance_of_time_in_words(user.updated_at)}
+  - if @follow.empty?
+    #{@user.username} n'est abonné à personne
+
+
+
+%h3<
+  Abonnés:
+%ul
+  - @followers.each do |user|
+    %li
+      %strong
+        %a{:href=>"/user/#{user.username}"}
+          #{user.username}
+      %span
+        Dernier code: #{distance_of_time_in_words(user.updated_at)}
+  - if @followers.empty?
+    Il n'y a personne d'abonné à #{@user.username}
+
+

@@ -1,0 +1,43 @@
+!!! 5
+%html
+  %head
+    %title Command-R
+    %script(type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js")
+    = set_tags
+  %body
+    %div#header
+      %h1
+        %a{:href=>"/"} Command-R
+      %ul#nav
+        %li<
+          %a{:href=>"/feed",:id=>"accueil"} Accueil
+        %li<
+          %a{:href=>"/code",:id=>"code"} Codes
+        %li<
+          %a{:href=>"/type",:id=>"type"} Types
+        %li<
+          %a{:href=>"/user",:id=>"auteur"} Auteurs
+      - if session["username"]
+        %div#menuUser
+          %p
+            %a{:href=>"/user/#{session["username"]}", :class=>"user"}=session["username"]
+            %a{:href=>"/new", :class=>"new"}<
+              Nouvelle Publication
+          %ul
+            %li<
+              %a{:href=>"/settings"}<
+                Paramètres
+            %li<
+              %a{:href=>"/logout"}<
+                Logout
+
+      - unless session["username"]
+        %a{:href=>"/login", :class=>"connection"}
+          Connectez-vous!
+
+    %div#content
+      =yield
+
+    %div#footer
+      %p
+        Copyright - © - Simon Prévost
