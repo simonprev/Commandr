@@ -1,15 +1,8 @@
-require 'rubygems'
-require 'sinatra/base'
-require 'dm-core'
-require 'ap'
-require 'dm-validations'
-require 'dm-timestamps'
-require 'dm-migrations'
-require 'dm-types'
-require 'dm-pager'
-#require 'dm-postgres-adapter'
-require 'haml'
+require 'bundler'
+Bundler.require :default
+
 require 'model.rb'
+
 
 DataMapper::Pagination.defaults[:size] = 5
 DataMapper::Pagination.defaults[:per_page] = 5
