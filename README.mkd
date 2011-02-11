@@ -1,0 +1,9 @@
+# Command-R
+(prononcé kommende air)
+
+Application Ruby grandement inspiré de dribbble.com et forrst.com
+
+Encore en développement intensif, le projet sera terminé le 28 mars 2011
+
+Ceci est ma première application Ruby/Sinatra, ne soyez pas trop dur avec mon code :)
+
