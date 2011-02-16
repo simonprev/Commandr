@@ -1,0 +1,12 @@
+%h1
+  Auteurs
+%ul.auteur
+  - @users.each do |user|
+    %li<
+      %a{:href=>"/user/#{user.username}"}<
+        =user.username
+        %span<
+          Nombre de codes:
+          %strong=Work.all(:user_id=>user.id).count.to_s
+        - if Work.all(:user_id=>user.id).count.to_s!="0"
+          = " | Dernier code: " + distance_of_time_in_words(user.updated_at)

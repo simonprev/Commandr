@@ -1,0 +1,33 @@
+%h1 #{@titre}
+- if !@feed.empty? 
+  - if @titre!="Dernières Activités"
+    - if @tri!="recent"
+      %a{:href=>"#{request.path}?tri=recent"}<
+        Récent
+    - else
+      %span<
+        Récent
+
+    - if @tri!="populaire"
+      %a{:href=>"#{request.path}?tri=populaire"}<
+        Populaire
+    - else
+      %span<
+        Populaire
+
+    - if @tri!="favoris"
+      %a{:href=>"#{request.path}?tri=favoris"}<
+        Favoris
+    - else
+      %span<
+        Favoris
+
+  %ul.codes
+    = haml(:_liste, :layout => false)    
+
+  - if @page!=@total_page && (@total_page!=1 || @count==0)
+    %a{:href=>"##{@page+1}", :id=>"plus"}
+      More...
+
+- else
+  %span.no-code Aucune publication

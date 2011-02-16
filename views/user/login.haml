@@ -1,0 +1,16 @@
+%h1 Se connecter
+%form{:action=>"/login", :method=>"post", :id=>"login"}
+  %p
+    %span{:id=>"erreur"}
+      #{@erreur}
+  %p 
+    %label{:for=>"username"} Username:
+    %input{:type => "text", :name => "username", :id=>"username"}
+  %p 
+    %label{:for=>"motPasse"} Mot de passe:
+    %input{:type => "password", :name => "password", :id=>"password"}
+
+  %p 
+    %input{:type => "submit", :value => "Se Connecter", :id => "submit"}
+
+

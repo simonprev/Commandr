@@ -1,0 +1,17 @@
+- @feed.each do |code|
+  %li{:class=>"#{(is_favorite @self,code)} #{is_self(code.user.username,session["username"])}"}
+    %div.list_info_code
+      %a{:href=>"/user/#{code.user.username}", :class=>"user"} #{code.user.username}
+      %span{:class=>"time"} Créé: #{distance_of_time_in_words(code.created_at)}
+
+      - if code.created_at!=code.updated_at
+        %span{:class=>"time"} Modfié: #{distance_of_time_in_words(code.updated_at)}
+
+      %a{:href=>"/type/#{code.type}", :class=>"type"} #{code.type}
+
+    %strong<
+      %a{:href=>"/#{code.id}", :class=>"titre"}=code.titre
+    %span{:class=>"list_stat_code"}<
+      = " Vues: "+ code.views.to_s + " Favoris: " + code.count_favorite.to_s + " Commentaires " + code.comments.count.to_s
+
+

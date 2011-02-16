@@ -1,0 +1,36 @@
+%div
+  %h1 Paramètres
+  %form{:action=>"/parametres", :method=>"post"}
+    = "[!] Ce formulaire contient #{@user.errors.size} erreur(s)" if @user && @user.errors.size!=0
+    %p
+      %label{:for=>"prenom"} Prénom:
+      %input{:type => "text", :name => "prenom",:value=>"#{@user.prenom if @user}"}
+      = form_erreur :prenom
+    %p
+      %label{:for=>"nom"} Nom:
+      %input{:type => "text", :name => "nom",:value=>"#{@user.nom if @user}"}
+      = form_erreur :nom
+    %p
+      %label{:for=>"motpasse"} Mot de passe:
+      %input{:type => "password", :name => "password",:value=>"#{params[:password] if @user}", :autocomplete=>"false"}
+      = form_erreur :password
+    %p
+      %label{:for=>"conf_motpasse"} Confirmation du mot de passe:
+      %input{:type => "password", :name => "conf_password", :autocomplete=>"false"}
+
+    %p
+      %label{:for=>"site_web"} Site web (optionel):
+      %input{:type => "text", :name => "site_web",:value=>"#{@user.site_web if @user}"}
+    %p
+      %label{:for=>"twitter"} Twitter (optionel):
+      %input{:type => "text", :name => "twitter_username",:value=>"#{@user.twitter_username if @user}"}
+
+    %p
+      %label{:for=>"name"} Description:
+      %br
+      %textarea{:name => "desc", :rows => "10"}
+        #{@user.desc if @user}
+      = form_erreur :desc
+
+    %p
+      %input{:type => "submit", :value => "Accepter les modifications"}
