@@ -1,33 +1,41 @@
 %h1 #{@titre}
+
+- if request.path.index("publications")
+  .nav_sec
+    - actif=case request.path.index("codes")
+      - when nil
+        - request.path.index("images") ? "images" : "tout"
+      - else 
+        - "codes"
+    %a{:href=>"/publications",:id=>"tout",:class=>"#{"actif" if actif=="tout"}"} Tout
+    %a{:href=>"/publications/codes",:id=>"code",:class=>"#{"actif" if actif=="codes"}"} Codes
+    %a{:href=>"/publications/images",:id=>"image",:class=>"#{"actif" if actif=="images"}"} Images
+
 - if !@feed.empty? 
   - if @titre!="Dernières Activités"
-    - if @tri!="recent"
-      %a{:href=>"#{request.path}?tri=recent"}<
-        Récent
-    - else
-      %span<
-        Récent
+    .tri
+      - if @work_tri!="recent"
+        = link_to "#{request.path}?tri=recent", "récent"
+      - else
+        %span récent
 
-    - if @tri!="populaire"
-      %a{:href=>"#{request.path}?tri=populaire"}<
-        Populaire
-    - else
-      %span<
-        Populaire
+      - if @work_tri!="populaire"
+        = link_to "#{request.path}?tri=populaire", "populaire"
+      - else
+        %span populaire
 
-    - if @tri!="favoris"
-      %a{:href=>"#{request.path}?tri=favoris"}<
-        Favoris
-    - else
-      %span<
-        Favoris
+      - if @work_tri!="favoris"
+        = link_to "#{request.path}?tri=favoris", "favoris"
+      - else
+        %span favoris
 
-  %ul.codes
+
+  %ul.publications
     = haml(:_liste, :layout => false)    
 
   - if @page!=@total_page && (@total_page!=1 || @count==0)
-    %a{:href=>"##{@page+1}", :id=>"plus"}
-      More...
+    #btn_plus{ :"data-path" => request.path }
+      = link_to "##{@page+1}", "Plus", {:id=>"plus"}
 
 - else
-  %span.no-code Aucun code
+  %span.no-code - Aucune publication -

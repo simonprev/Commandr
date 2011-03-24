@@ -1,15 +1,8 @@
-%h1
-  Types
-%ul.type
-  %li
-    %a{:href=>"#{request.path}/ruby"}
-      Ruby
-  %li
-    %a{:href=>"#{request.path}/html"}
-      HTML
-  %li
-    %a{:href=>"#{request.path}/jscript"}
-      Js
-  %li
-    %a{:href=>"#{request.path}/css"}
-      CSS
+%h1 Types
+%ul.list_type
+  - @count_type.each do |type|
+    %li
+      %a{:href=>"#{request.path}/#{type[0]}"}
+        %span.nom_type #{type[0]} 
+        #{"/"} 
+        %span.count #{type[1]} publications

@@ -1,0 +1,41 @@
+
+.list_type li {
+clear:both;
+width: 345px;
+}
+
+.list_type li .count {
+display:inline-block;
+font-weight:400;
+margin-left:12px;
+text-align:left;
+width:185px;
+}
+
+.list_type li .nom_type {
+color:#6a50b2;
+display:inline-block;
+margin-right:12px;
+padding-left:12px;
+width:108px;
+}
+
+.list_type li a {
+-webkit-transition:all 150ms ease;
+-moz-transition: all 150ms ease;
+-o-transition: all 150ms ease;
+transition: all 150ms ease;
+-moz-border-radius:3px;
+background:transparent;
+border:1px solid transparent;
+border-radius:3px;
+clear:both;
+display:block;
+margin:4px auto;
+padding:6px 0;
+}
+
+.list_type li a:hover {
+background:#e4ddf7;
+border:1px solid #d3c6f4;
+}

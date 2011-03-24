@@ -1,36 +1,44 @@
-%div
-  %h1 Nouveau code
-  %form{:action=>"/new_code", :method=>"post"}
-    - if @work
-      - @work.errors.each do |e|
-        #{e}
-        %br
+%h1 Nouveau code
+%form{:action=>"/publications/new/code", :method=>"post", :class=>"formulaire"}
+  - unless @post.errors.size==0
+    .erreur
+      = "Ce formulaire contient #{@post.errors.size.to_s} erreur(s)" 
+  %p
+    %label{:for=>"name"} Titre:
+    %input{:type => "text", :name => "work_title",:value=>"#{@post.titre if @post}"}
+    %span.erreur= @post.errors["titre"]
+  %p
+    %label{:for=>"name"} Code:
+    %br
+    %span.erreur= @post.errors["body"]
+    %textarea{:name => "work_body", :rows => "10"}
+      #{@post.body if @post}
+  %p
+    %label{:for=>"name"} Description:
+    %br
+    %span.erreur= @post.errors["desc"]
+    %textarea{:name => "work_desc", :rows => "10"}
+      #{@post.desc if @post}
+  %p.langage-selectbox
+    %label{:for=>"work_lang"} Langage:
+    %select{:name => "work_lang", :id=>"langage"}
+      %option{:value=>"actionscript3"}Actionscript 3
+      %option{:value=>"c"}C/C++/Obj-C
+      %option{:value=>"css"}CSS
+      %option{:value=>"html"}HTML
+      %option{:value=>"java"}Java
+      %option{:value=>"jscript"}Javascript
+      %option{:value=>"perl"}Perl
+      %option{:value=>"php"}PHP
+      %option{:value=>"python"}Python
+      %option{:value=>"ruby"}Ruby
+      %option{:value=>"scss"}Scss
+      %option{:value=>"sql"}Sql
+  %p
+    %input{:type => "submit", :value => "Publier ce code", :class=>"bouton mauve"}
 
-    %p
-      %label{:for=>"name"} Titre:
-      %input{:type => "text", :name => "work_title",:value=>"#{@work.titre if @work}"}
-    %p
-      %label{:for=>"name"} Code:
-      %br
-      %textarea{:name => "work_body", :rows => "10"}
-        #{@work.body if @work}
-    %p
-      %label{:for=>"name"} Description:
-      %br
-      %textarea{:name => "work_desc", :rows => "10"}
-        #{@work.desc if @work}
-    %p
-      Langage:
-      %select{:name => "work_lang"}
-        %option{:value=>"ruby"}<
-          Ruby
-        %option{:value=>"html"}<
-          HTML
-        %option{:value=>"jscript"}<
-          Javascript
-        %option{:value=>"css"}<
-          CSS
-    %p
-      %input{:type => "submit", :value => "Save"}
-
-
+%script(type="text/javascript" src="/js/jquery.selectbox-0.5.js")
+:javascript
+  $(document).ready(function() {
+    $('#langage').selectbox();
+  });

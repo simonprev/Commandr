@@ -2,4 +2,4 @@ require 'rubygems'
 require 'sinatra'
 require 'commandr'
 
-run App.new
+run Commandr.new

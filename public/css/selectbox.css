@@ -1,0 +1,63 @@
+/* Drop down styles*/
+div.selectbox-wrapper {
+  position:absolute;
+  background-color:white;
+  border:1px solid #ccc;
+  margin:0px;
+  margin-top:-10px;
+  padding:0px;
+  text-align:left;
+top: -282px;
+left: 0px;
+-moz-box-shadow:0 1px 3px #CCC;
+-webkit-box-shadow:0 1px 3px #CCC;
+box-shadow:0 1px 3px #CCC;
+border:1px #6e56b1 solid;
+border-radius:3px;
+-moz-border-radius:3px;
+}
+
+/*Drop down list styles*/
+div.selectbox-wrapper ul {
+  list-style-type:none;
+  margin:0px;
+  padding:0px;
+}
+/* Selected item in dropdown list*/
+div.selectbox-wrapper ul li.selected { 
+  background-color: #E6E1F5;
+}
+
+/* Hover state for dropdown list */
+div.selectbox-wrapper ul li.current { 
+  background-color: #6A50B2;
+  color:#FFF;
+  cursor:pointer;
+  text-shadow: 0 1px 1px #382A5C;
+}
+
+/* Drop down list items style*/
+div.selectbox-wrapper ul li {
+  list-style-type:none;
+  display:block;
+  margin:0;
+  padding:5px;
+  cursor:pointer;
+}
+
+/* Look and feel of select box */
+.selectbox 
+{
+  margin: 0px 5px 10px 0px;
+  padding-left:2px;
+  font-size:1em;/* Resize Font*/
+  display : block;
+  text-align:left; 
+  cursor: pointer;
+  border:1px solid #D1E4F6;
+  color:#333;
+}
+
+.langage-selectbox{
+  position:relative;
+}

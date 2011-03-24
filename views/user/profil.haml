@@ -1,0 +1,31 @@
+%h1 #{@user.username}
+- p @user
+.nav_sec.long
+  %a{:href=>"/users/#{params[:user]}",:id=>"tout"} Fil
+  %a{:href=>"/users/#{params[:user]}/profil", :class=>"actif"} Profil
+  %a{:href=>"/users/#{params[:user]}/abonnes"} Abonnés
+  %a{:href=>"/users/#{params[:user]}/abonnements"} Abonnements
+
+#profil
+  %h2 #{@user.prenom+" "+@user.nom}
+  %p Inscris depuis: #{@user.created_at}
+  - if @user.twitter_username!=""
+    %p.liensExternes Twitter: #{link_to "http://twitter.com/"+@user.twitter_username, "@"+@user.twitter_username}
+  - if @user.site_web!=""
+    %p.liensExternes Site web: #{link_to "http://"+@user.site_web,@user.site_web}
+  %p.desc #{@user.desc}
+
+  %h3 Statistiques
+  %p.infos_user<
+    Nombre de publications:
+    %em #{@user.count_works}
+  %p.infos_user
+    Abonnés:
+    %em #{@user.count_followers}
+  %p.infos_user
+    Abonnements:
+    %em #{@user.count_follows}
+  %p.infos_user
+    Dernière publication:
+    %em #{@user.derniere_publication}
+

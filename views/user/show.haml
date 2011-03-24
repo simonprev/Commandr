@@ -1,0 +1,49 @@
+%h1 #{@titre}
+
+.nav_sec.long
+  %a{:href=>"/users/#{params[:user]}",:id=>"tout", :class=>"actif"} Fil
+  %a{:href=>"/users/#{params[:user]}/profil",:id=>"code"} Profil
+  %a{:href=>"/users/#{params[:user]}/abonnes",:id=>"image"} Abonnés
+  %a{:href=>"/users/#{params[:user]}/abonnements",:id=>"image"} Abonnements
+
+
+- if @self && @self.username!=@user.username && !@self.follows.include?(@user)
+  %form{:method=>"post", :class=>"abonnement", :action=>"#{@user.username}"}
+    %button{:type=>"submit", :class=>"bouton vert", :value=>"S'abonner"}
+      S'abonner
+
+- if @self && @self.username!=@user.username && @self.follows.include?(@user)
+  %form{:method=>"post", :class=>"abonnement", :action=>"#{@user.username}"}
+    %button{:type=>"submit", :class=>"bouton rouge", :value=>"S'abonner"}
+      Se désabonner
+
+- if !@feed.empty? 
+  - if @titre!="Dernières Activités"
+    .tri
+      - if @work_tri!=:created_at.desc
+        %a{:href=>"#{request.path}?tri=recent"} récent
+      - else
+        %span récent
+
+      - if @work_tri!=[:views.desc,:created_at.desc]
+        %a{:href=>"#{request.path}?tri=populaire"} populaire
+      - else
+        %span populaire
+
+      - if @work_tri!=[:count_favorite.desc,:created_at.desc]
+        %a{:href=>"#{request.path}?tri=favoris"} favoris
+      - else
+        %span favoris
+
+
+  %ul.publications
+    = haml(:_liste, :layout => false)
+
+  - if @page!=@total_page && (@total_page!=1 || @count==0)
+    #btn_plus{ :"data-path" => request.path }
+      = link_to "##{@page+1}", "Plus", {:id=>"plus"}
+
+
+
+- else
+  %span.no-code - Aucune publication - 

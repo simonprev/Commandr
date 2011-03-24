@@ -1,12 +1,29 @@
-%h1
-  Auteurs
-%ul.auteur
-  - @users.each do |user|
-    %li<
-      %a{:href=>"/user/#{user.username}"}<
-        =user.username
-        %span<
-          Nombre de codes:
-          %strong=Work.all(:user_id=>user.id).count.to_s
-        - if Work.all(:user_id=>user.id).count.to_s!="0"
-          = " | Dernier code: " + distance_of_time_in_words(user.updated_at)
+%h1= params[:user] || "Auteurs"
+
+- if params[:user]
+  .nav_sec.long
+    - actif=request.path.index("abonnes") ? "abonnes" : "abonnements"
+
+    %a{:href=>"/users/#{params[:user]}",:id=>"tout"} Fil
+    %a{:href=>"/users/#{params[:user]}/profil"} Profil
+    %a{:href=>"/users/#{params[:user]}/abonnes",:class=>"#{"actif" if actif=="abonnes"}"} Abonnés
+    %a{:href=>"/users/#{params[:user]}/abonnements",:class=>"#{"actif" if actif=="abonnements"}"} Abonnements
+
+- if @count!=0
+  %table.auteur
+    %th.username<
+      %a{:class=>"#{"actif" if @user_tri==:username.asc}" ,:href=>"?tri=username"} Nom d'utilisateur
+    %th.count_works<
+      %a{:class=>"#{"actif" if @user_tri==:count_works.desc}", :href=>"?tri=publications"} Publications
+    %th.count_followers<
+      %a{:class=>"#{"actif" if @user_tri==:count_followers.desc}", :href=>"?tri=abonnes"} Abonnés
+    %th.dernier_publication<
+      %a{:class=>"#{"actif" if @user_tri==:derniere_publication.desc}", :href=>"?tri=derniere"} Dernière publication
+
+    = haml(:'user/_liste_user', :layout => false)
+
+  - if @page!=@total_page && (@total_page!=1 || @count==0)
+    #btn_plus{ :"data-path" => request.path }
+      = link_to "##{@page+1}", "Plus", {:id=>"plus"}
+- else
+  %span.no-code - Aucun - 

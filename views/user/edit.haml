@@ -1,1 +1,35 @@
-%h1
+%div
+  %h1 Mes paramètres
+  %form{:action=>"/users/#{session["username"]}/parametres", :method=>"post", :class=>"formulaire"}
+    - unless @user.errors.size==0
+      .erreur
+        = "Ce formulaire contient #{@user.errors.size.to_s} erreur(s)" 
+
+    %p
+      %label{:for=>"prenom"} Prénom:
+      %input{:type => "text", :name => "prenom",:value=>"#{@user.prenom}"}
+      %span.erreur= @user.errors["prenom"]
+    %p
+      %label{:for=>"nom"} Nom:
+      %input{:type => "text", :name => "nom",:value=>"#{@user.nom}"}
+      %span.erreur= @user.errors["nom"]
+    %p
+      %label{:for=>"site_web"} Site Web:
+      %input{:type => "text", :name => "site_web",:value=>"#{@user.site_web}"}
+      %span.erreur= @user.errors["site_web"]
+    %p
+      %label{:for=>"twitter_username"} Twitter Username:
+      %input{:type => "text", :name => "twitter_username",:value=>"#{@user.twitter_username}"}
+      %span.erreur= @user.errors["twitter_username"]
+
+    %p
+      %label{:for=>"desc"} Description:
+      %span.erreur= @user.errors["desc"]
+      %br
+      %textarea{:name => "desc", :rows => "10"}
+        #{@user.desc}
+
+    %p
+      %input{:type => "submit", :value => "Sauvegarder les modifications", :class=>"bouton mauve"}
+
+

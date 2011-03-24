@@ -1,0 +1,12 @@
+- @users.each do |user|
+  %tr.rowUser
+    %td.username<
+      %a{:href=>"/users/#{user.username}"} #{user.username}
+    %td.count_works #{user.count_works}
+    %td.count_followers #{user.count_followers}
+    %td.dernier_publication<
+      - if user.derniere_publication
+        = user.works[-1].distance_of_time_in_words(user.derniere_publication)
+      - else
+        Aucune
+

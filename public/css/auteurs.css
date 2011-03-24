@@ -1,0 +1,70 @@
+.auteur {
+color:#323232;
+margin-bottom:22px;
+width:100%;
+}
+
+.auteur a {
+display:block;
+}
+
+.auteur a.actif:after {
+content:"  ↓";
+}
+
+th {
+font-size:12px;
+padding:10px 0;
+text-align:left;
+}
+
+tr {
+-moz-transition:all 0.15s linear;
+-o-transition:all 0.15s linear;
+-webkit-transition:all 0.15s linear;
+border:1px solid #eaeaea;
+display:block;
+transition:all 0.15s linear;
+}
+
+tr.rowUser:hover {
+-moz-border-radius:3px;
+background:#e6e1f5;
+border:1px solid #d3c6f4;
+border-radius:3px;
+}
+
+tr .username {
+width:150px;
+}
+
+.username a {
+display:block;
+padding:10px 0;
+width:100%;
+}
+
+tr .count_works {
+padding-right:10px;
+width:87px;
+}
+
+tr .count_followers {
+padding-right:20px;
+width:65px;
+}
+
+tr .dernier_publication {
+width:140px;
+}
+
+tr.rowUser .dernier_publication {
+color:#AAA;
+font-style:italic;
+}
+
+tr.rowUser .username a {
+background:url(../images/icon_user.png) no-repeat 3px 11px;
+padding-left:22px;
+}
+

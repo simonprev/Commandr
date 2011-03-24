@@ -1,15 +1,27 @@
-%h1
-  Modifier
-= @error
-%form{:action=>"/#{@code.id}/modify", :method=>"post"}
-  %input{:type=>"hidden", :name=>"_method", :value=>"put"}
-    %p 
-      %label{:for=>"name"} Titre:
-      %input{:type => "text", :name => "work_title", :value=>"#{@code.titre}"}
-    %p
-      %textarea{:name => "work_body", :rows => "10"}
-        :preserve
-          #{@code.body}
-    %p 
-      %input{:type=>"submit", :value=>"Modifier"}
+%h1 Modification - #{@post.titre}
+%form{:action=>"/publications/#{@post.id}/edit", :method=>"post", :class=>"formulaire"}
+  - unless @post.errors.size==0
+    .erreur
+      = "Ce formulaire contient #{@post.errors.size.to_s} erreur(s)" 
+  %p 
+    %label{:for=>"name"} Titre:
+    %input{:type => "text", :name => "title", :value=>"#{@post.titre}"}
+    %span.erreur= @post.errors["titre"]
 
+  - if @post.type!="image"
+    %p
+      %label{:for=>"body"} Code:
+      %br
+      %span.erreur= @post.errors["body"]
+      %textarea{:name => "body", :rows => "10"}
+        :preserve
+          #{@post.body}
+  %p
+    %label{:for=>"desc"} Description:
+    %br
+    %span.erreur= @post.errors["desc"]
+    %textarea{:name => "desc", :rows => "10"}
+      #{@post.desc}
+  %p 
+    %a{:href=>"/publications/#{@post.id}", :class=>"annuler"} annuler
+    %input{:type=>"submit", :value=>"Modifier", :class=>"bouton mauve"}

@@ -1,36 +1,41 @@
-%div
-  %h1 Nouveau code
-  %form{:action=>"/new_code", :method=>"post"}
-    - if @work
-      - @work.errors.each do |e|
-        #{e}
-        %br
+%h1 Inscrivez-vous!
+%form{:action=>"/users/new", :method=>"post",:class=>"formulaire"}
+  - unless @user.errors.size==0
+    %div.erreur
+      = "Ce formulaire contient #{@user.errors.size.to_s} erreur(s)"
 
-    %p
-      %label{:for=>"name"} Titre:
-      %input{:type => "text", :name => "work_title",:value=>"#{@work.titre if @work}"}
-    %p
-      %label{:for=>"name"} Code:
-      %br
-      %textarea{:name => "work_body", :rows => "10"}
-        #{@work.body if @work}
-    %p
-      %label{:for=>"name"} Description:
-      %br
-      %textarea{:name => "work_desc", :rows => "10"}
-        #{@work.desc if @work}
-    %p
-      Langage:
-      %select{:name => "work_lang"}
-        %option{:value=>"ruby"}<
-          Ruby
-        %option{:value=>"html"}<
-          HTML
-        %option{:value=>"jscript"}<
-          Javascript
-        %option{:value=>"css"}<
-          CSS
-    %p
-      %input{:type => "submit", :value => "Save"}
+  %p
+    %label{:for=>"prenom"} Prénom:
+    %input{:type => "text", :name => "prenom",:value=>"#{@user.prenom}"}
+    %span.erreur= @user.errors["prenom"]
+  %p
+    %label{:for=>"nom"} Nom:
+    %input{:type => "text", :name => "nom",:value=>"#{@user.nom}"}
+    %span.erreur= @user.errors["nom"]
+  %p
+    %label{:for=>"username"} Username:
+    %input{:type => "text", :name => "username",:value=>"#{@user.username}"}
+    %span.erreur= @user.errors["username"]
+  %p
+    %label{:for=>"motpasse"} Mot de passe:
+    %input{:type => "password", :name => "password"}
+    %span.erreur= @user.errors["password"][0]
+  %p
+    %label{:for=>"site_web"} Site Web:
+    %input{:type => "text", :name => "site_web",:value=>"#{@user.site_web}"}
+    %span.erreur= @user.errors["site_web"]
+  %p
+    %label{:for=>"twitter_username"} Twitter Username:
+    %input{:type => "text", :name => "twitter_username",:value=>"#{@user.twitter_username}"}
+    %span.erreur= @user.errors["twitter_username"]
+
+  %p
+    %label{:for=>"desc", :class=>"lTextearea"} Description:
+    %span.erreur.textarea_erreur= @user.errors["desc"]
+    %textarea{:name => "desc", :rows => "10"}
+      #{@user.desc}
+
+  %p
+    %input{:type => "submit", :value => "Créer mon compte", :id=>"btnConnexion", :class=>"bouton mauve"} 
 
 

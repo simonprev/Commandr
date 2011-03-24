@@ -1,17 +1,26 @@
-- @feed.each do |code|
-  %li{:class=>"#{(is_favorite @self,code)} #{is_self(code.user.username,session["username"])}"}
-    %div.list_info_code
-      %a{:href=>"/user/#{code.user.username}", :class=>"user"} #{code.user.username}
-      %span{:class=>"time"} Créé: #{distance_of_time_in_words(code.created_at)}
+- @feed.each do |post|
+  %li{:class=>"#{(is_favorite @self,post)} #{is_self(post.user.username,session["username"])}"}
+    %a{:class=>"image_post", :href=>"/publications/#{post.id}"}<
+      - if post.type=="image"
+        %img{:src=>"/files/thumbs/thumb_#{post.file_file_name}"}
+      - else
+        %img{:src=>"/images/thumb.jpg"}
+        %span.image_type { #{post.type.upcase} }
 
-      - if code.created_at!=code.updated_at
-        %span{:class=>"time"} Modfié: #{distance_of_time_in_words(code.updated_at)}
+    .infos
+      %strong<
+        %a{:href=>"/publications/#{post.id}", :class=>"titre"}=post.titre
 
-      %a{:href=>"/type/#{code.type}", :class=>"type"} #{code.type}
-
-    %strong<
-      %a{:href=>"/#{code.id}", :class=>"titre"}=code.titre
-    %span{:class=>"list_stat_code"}<
-      = " Vues: "+ code.views.to_s + " Favoris: " + code.count_favorite.to_s + " Commentaires " + code.comments.count.to_s
+      %a{:href=>"/users/#{post.user.username}", :class=>"user"}< 
+        = post.user.username==session["username"] ? "moi" : post.user.username
+      |
+      %span{:class=>"time", :title => post.created_at.to_s} #{post.distance_of_time_in_words(post.created_at)}
+      |
+      %a{:href=>"/types/#{post.type}", :class=>"type"} #{post.type}
+    
+    %span{:class=>"list_stat_post"}
+      %span.views= post.views.to_s
+      %span.comments= post.count_comments.to_s
+      %span.favoris= post.count_favorite.to_s
 
 

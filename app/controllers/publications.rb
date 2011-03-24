@@ -13,143 +13,100 @@
 # CREATE COMMENTAIRE
 
 module PublicationsController
+  include Magick 
   def self.included( app )
 
     #LIST FEED
     app.get '/feed' do #{{{
       if session["username"]
         @titre="Dernières Activités"
-        set_self session["username"]
-        @follows=@self.follows.collect {|x| x.id }
-        @follows << @self.id
+        follows=@self.follows.collect {|x| x.id }
+        follows << @self.id
 
-        @tri="feed"
+        count=Work.all(:user_id=>follows).count
+        set_pagination count,params[:page]
 
-        @count=Work.all(:user_id=>1).count
-        set_pagination @count,params[:page]
+        @feed=Work.all(:order=>:updated_at.desc, :user_id=>follows).page @page
 
-        @feed=Work.all(:order=>:updated_at.desc, :user_id=>@follows).page @page
-
-        return works_json @feed if request.xhr?
-
-        haml :'publication/index'
-
+        return request.xhr? ? works_json(@feed) : haml(:'publication/index')
       else
         redirect '/publication'
       end
     end #}}}
 
     #LIST ALL
-    app.get '/publication' do #{{{
-      p salt("cool","cool")
-      @titre="Publications"
-      set_self session["username"]
-
-      @count=Work.all.count
+    app.get '/publications' do #{{{
+      @titre="Publications - Tout"
+      case params[:tri]
+        when "recent":    @work_tri=:created_at.desc;
+        when "populaire": @work_tri=[:views.desc,:created_at.desc];
+        when "favoris":   @work_tri=[:count_favorite.desc,:created_at.desc];
+        else              @work_tri=:created_at.desc;
+      end
+      @count=Work.all().count
       set_pagination @count,params[:page]
 
-      @tri=params[:tri] || "recent"
-
-      if @tri=="recent" || !@tri
-        #sortby Date de création!
-        @feed=Work.all().page @page, :order=>:updated_at.desc
-      elsif @tri=="populaire"
-        #sortby Views!
-        @feed=Work.all().page @page, :order=>[:views.desc,:updated_at.desc]
-      elsif @tri=="favoris"
-        #sortby Favorited!
-        @feed=Work.all().page @page, :order=>[:count_favorite.desc,:updated_at.desc]
-      end
-
-      return works_json @feed if request.xhr?
-
-      haml :'publication/index'
-
+      @feed=Work.all().page @page, :order=>@work_tri
+      @work_tri=params[:tri] || "recent"
+      return request.xhr? ? works_json(@feed) : haml(:'publication/index')
     end #}}}
 
-
     #LIST CODES
-    app.get '/code' do #{{{
-      @titre="Codes"
-      set_self session["username"]
-
+    app.get '/publications/codes' do #{{{
+      @titre="Publications - Codes"
+      case params[:tri]
+        when "recent":    @work_tri=:created_at.desc;
+        when "populaire": @work_tri=[:views.desc,:created_at.desc];
+        when "favoris":   @work_tri=[:count_favorite.desc,:created_at.desc];
+        else              @work_tri=:created_at.desc;
+      end
       @count=Work.all(:type.not=>"image").count
       set_pagination @count,params[:page]
 
-      @tri=params[:tri] || "recent"
-
-      if @tri=="recent" || !@tri
-        #sortby Date de création!
-        @feed=Work.all(:type.not=>"image").page @page, :order=>:updated_at.desc
-      elsif @tri=="populaire"
-        #sortby Views!
-        @feed=Work.all(:type.not=>"image").page @page, :order=>[:views.desc,:updated_at.desc]
-      elsif @tri=="favoris"
-        #sortby Favorited!
-        @feed=Work.all(:type.not=>"image").page @page, :order=>[:count_favorite.desc,:updated_at.desc]
-      end
-
-      return works_json @feed if request.xhr?
-
-      haml :'publication/index'
-
-
+      @feed=Work.all(:type.not=>"image").page @page, :order=>@work_tri
+      @work_tri=params[:tri] || "recent"
+      return request.xhr? ? works_json(@feed) : haml(:'publication/index')
     end #}}}
 
     #LIST IMAGES
-    app.get '/image' do #{{{
-      @titre="Images"
-      set_self session["username"]
-
+    app.get '/publications/images' do #{{{
+      @titre="Publications - Images"
+      case params[:tri]
+        when "recent":    @work_tri=:created_at.desc;
+        when "populaire": @work_tri=[:views.desc,:created_at.desc];
+        when "favoris":   @work_tri=[:count_favorite.desc,:created_at.desc];
+        else              @work_tri=:created_at.desc;
+      end
       @count=Work.all(:type=>"image").count
       set_pagination @count,params[:page]
 
-      @tri=params[:tri] || "recent"
-
-      if @tri=="recent" || !@tri
-        #sortby Date de création!
-        @feed=Work.all(:type=>"image").page @page, :order=>:updated_at.desc
-      elsif @tri=="populaire"
-        #sortby Views!
-        @feed=Work.all(:type=>"image").page @page, :order=>[:views.desc,:updated_at.desc]
-      elsif @tri=="favoris"
-        #sortby Favorited!
-        @feed=Work.all(:type=>"image").page @page, :order=>[:count_favorite.desc,:updated_at.desc]
-      end
-
-      return works_json @feed if request.xhr?
-
-      haml :'publication/index'
-
-    end #}}}
+      @feed=Work.all(:type=>"image").page @page, :order=>@work_tri
+      @work_tri=params[:tri] || "recent"
+      return request.xhr? ? works_json(@feed) : haml(:'publication/index')    end #}}}
 
     #NEW
-    app.get '/new' do #{{{
-
-      if session["username"]
-        haml :'publication/new'
-      else
-        redirect '/login'
-      end
-
+    app.get '/publications/new' do #{{{
+      @titre="Nouvelle Publication"
+      session["username"] ? haml(:"publication/new") : redirect("/login")
     end #}}}
 
     #NEW CODE
-    app.get '/new_code' do #{{{
+    app.get '/publications/new/code' do #{{{
 
+      @titre="Nouvelle Publication - Code"
       if session["username"]
+        @post=Work.new
+        @template="formulaire"
         haml :'publication/new_code'
       else
         redirect '/login'
       end
-
     end #}}}
 
     #CREATE CODE
-    post '/new_code' do #{{{
-      @self = User.first(:username=>session["username"])
+    app.post '/publications/new/code' do #{{{
 
-      @work = Work.new(:titre => params[:work_title],
+      @post = Work.new(:titre => params[:work_title],
                        :body  => params[:work_body],
                        :desc => params[:work_desc],
                        :type  => params[:work_lang],
@@ -158,57 +115,73 @@ module PublicationsController
 
       @self.update!(:updated_at=>Time.now)
 
-      if @work.save
-        redirect "/#{@work.id}"
+      if @self && @post.save
+        flash[:notice] = "La publication a été sauvegardée avec succès"
+        redirect "/publications/#{@post.id}"
       else
-        haml :'publciation/new_code'
+        @template="formulaire"
+        haml :'publication/new_code'
       end
 
     end #}}}
 
     #NEW IMAGE
-    get '/new_image' do #{{{
-
+    app.get '/publications/new/image' do #{{{
       if session["username"]
+        @titre="Nouvelle Publication - Image"
+        @post=Work.new
+        @template="formulaire"
         haml :'publication/new_image'
       else
         redirect '/login'
       end
-
     end #}}}
 
     #CREATE IMAGE
-    post '/new_image' do #{{{
-      @work = Work.new(:titre => params[:work_title],
+    app.post '/publications/new/image' do #{{{
+      @post = Work.new(:titre => params[:work_title],
                        :body => "Aucun code pour une image",
                        :desc => params[:work_desc],
                        :type  => "image",
-                       :created_at => Time.now.to_i,
                        :user_id=>session["id"]
                        )
 
-      #UPLOAD D'IMAGE EN DÉVELOPPEMENT (aucunement sécuritaire)
-      if @work.save && params[:file] && (tmpfile = params[:file][:tempfile]) && (name = params[:file][:filename])
-        File.open(File.join(Dir.pwd,"public/files", @work.id.to_s), "wb") { |f| f.write(tmpfile.read) }
-        redirect "/#{@work.id}"
-      else
-        unless params[:file] && (tmpfile = params[:file][:tempfile]) && (name = params[:file][:filename])
-          @work.errors.add :fichier,"Vous devez choisir un fichier"
+        unless params[:file]
+          erreur_file=true
+        else
+          titre_image=@post.titre.gsub(/[\.\s !éçÇâàÀÂÉÈôÖôöè]/,"")
+          @post.file = @post.make_paperclip_mash(params[:file],titre_image+@post.user_id.to_s)
         end
-        haml :'publication/new_image'
-      end
+
+
+        if !erreur_file && @post.save
+          ext=@post.file_file_name.partition "."
+          # concatène "." + "format"
+          ext=ext[1]+ext[2]
+          image=Image.read("#{Dir.pwd}/public/files/images/"+titre_image+@post.user_id.to_s+ext).first
+          thumb=image.crop!(0,0,125,55)
+          thumb.write("#{Dir.pwd}/public/files/thumbs/thumb_"+titre_image+@post.user_id.to_s+ext)
+
+          flash[:notice] = "La publication a été sauvegardée avec succès"
+          @self.update!(:updated_at=>Time.now)
+          redirect "/publications/#{@post.id}"
+        else
+          @post.valid?
+          @post.errors.add(:fichier,"Vous devez choisir un fichier") if erreur_file
+          @template="formulaire"
+          haml :'publication/new_image'
+        end
 
     end #}}}
-   
-    #SHOW
-    app.get %r{^\/([0-9]{0,4})$} do |id| #{{{
 
-      set_self session["username"]
-      @code=Work.get(id)
-      if @code
-        @user=@code.user
-        @comments=Comment.all(:work_id=>id)
-        @is_favorite=is_favorite @self,@code
+    #SHOW
+    app.get %r{^\/publications/([0-9]{0,4})$} do |id| #{{{
+      @post=Work.get(id)
+      if @post
+        @titre=@post.titre+" - "+@post.user.username
+        @user=@post.user
+        @comments=@post.comments
+        @is_favorite=is_favorite @self,@post
 
         if !session["views"]
           session["views"]=[]
@@ -216,92 +189,104 @@ module PublicationsController
 
         if !session["views"].include? id.to_i
           session["views"] << id.to_i
-          @code.update!(:views=>@code.views+1)
+          @post.update!(:views=>@post.views+1)
         end
 
+        @template="show_publication"
         haml :'publication/show'
       else
-        redirect "/cannot_find_what_you_are_looking_for_sorry"
+        404
       end
 
     end #}}}
 
     #FAVORIS
-    app.get '/:id/fav' do #{{{
-      @self=User.first(:fields=>[:id,:username],:username=>session["username"])
-      @code=Work.first(:fields=>[:id], :id=>params[:id])
-      @count_fav=@code.count_favorite
+    app.get %r{^\/publications/([0-9]{0,4})/fav$} do |id|#{{{
+      @post=Work.first(:fields=>[:id], :id=>id)
+      @count_fav=@post.count_favorite
 
-      @is_favorite=Favorite.is_favorite @self,@code
+      @is_favorite=is_favorite @self,@post
 
       if @is_favorite
-        @code.update!(:count_favorite=>@count_fav-1)
-        Favorite.first(:user=>@self,:work=>@code).destroy
+        @post.update!(:count_favorite=>@count_fav-1)
+        flash[:notice] = "\"#{@post.titre}\" a été retiré de vos favoris"
+        Favorite.first(:user=>@self,:work=>@post).destroy
       else
-        @code.update!(:count_favorite=>@count_fav+1)
-        Favorite.create(:user=>@self,:work=>@code)
+        @post.update!(:count_favorite=>@count_fav+1)
+        flash[:notice] = "\"#{@post.titre}\" a été ajouté à vos favoris"
+        Favorite.create(:user=>@self,:work=>@post)
       end
 
-      redirect "/#{params[:id]}"
-
+      if request.xhr?
+        return @count_fav
+      else
+        redirect "/publications/#{id}"
+      end
 
     end #}}}
 
     #CREATE COMMENTAIRE
-    app.post '/:id' do #{{{
+    app.post %r{^\/publications/([0-9]{0,4})$} do |id| #{{{
 
-      @comment=Comment.create(:nom  => session["username"],
+      @comment=Comment.new(:nom  => session["username"],
                               :body => params[:comment_body],
-                              :work_id=>params[:id],
+                              :work_id=>id,
                               :user_id=> session["id"])
 
-      redirect "/#{params[:id]}"
-
+      if @comment.save then
+        flash[:notice] = "Vote commentaire a été sauvegardé avec succès"
+      end
+      redirect "/publications/#{id}"
 
     end #}}}
 
     #DELETE
-    app.delete '/delete/:id' do #{{{
+    app.delete %r{^\/publications/([0-9]{0,4})$} do |id|#{{{
 
-      @code=Work.get(params[:id])
+      @post=Work.get(id)
 
-      if @code.destroy
-        redirect "/"
+      if @post.destroy
+        flash[:notice] = "\"#{@post.titre}\" a été effacée avec succès"
+        redirect "/publications"
       else
-        redirect"/#{params[:id]}"
+        flash[:notice] = "Suppression de \"#{@post.titre}\" échouée"
+        redirect"/publications/#{id}"
       end
 
     end #}}}
 
     #EDIT
-    app.get '/edit/:id' do #{{{
+    app.get %r{^\/publications/([0-9]{0,4})/edit$} do |id|#{{{
 
-      @code=Work.get(params[:id])
-      if session["id"]==@code.user_id
+      @post=Work.get(id)
+      @titre=@post.titre+" - Modification"
+      if session["id"]==@post.user_id
+        @template="formulaire"
         haml :'publication/edit'
       else
-        redirect "/#{params[:id]}"
+        redirect "/publications/#{id}"
       end
 
     end #}}}
 
     #SAVE EDIT
-    app.put "/edit/:id" do #{{{
-      @error=[]
-      @code=Work.first(params[:id])
-      if params[:work_title]==""
-        @error.push "Le titre ne doit pas être vide"
-      end
-      if params[:work_body]==""
-        @error.push "Le contenu ne doit pas être vide"
-      end
-
-      @code.update!(:titre => params[:work_title],:body  => params[:work_body],:updated_at=> Time.now) if @error.empty?
-
-      if @error.empty?
-        redirect "/#{params[:id]}"
+    app.post %r{^\/publications/([0-9]{0,4})/edit$} do |id|#{{{
+      @post=Work.get(id)
+      if @post.type=="image"
+        @post.body="Aucun code pour une image"
       else
-        haml :modify
+        @post.body=params[:body]
+      end
+      @post.titre=params[:title]
+      @post.desc=params[:desc]
+
+      if @post.save
+        flash[:notice] = "\"#{@post.titre}\" a été modifiée avec succès"
+        redirect "/publications/#{id}"
+      else
+        @template="formulaire"
+        @post.titre=Work.get(id).titre
+        haml :'publication/edit'
       end
     end #}}}
   end

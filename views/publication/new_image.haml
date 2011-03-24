@@ -1,20 +1,20 @@
-%div
-  %h1 Upload
-- if @work
-  - @work.errors.each do |e|
-    #{e}
-    %br
+%h1 Nouvelle image
+%form{:action=>"/publications/new/image",:method=>"post",:enctype=>"multipart/form-data", :class=>"formulaire"}
+  - unless @post.errors.size==0
+    .erreur
+      = "Ce formulaire contient #{@post.errors.size.to_s} erreur(s)"
 
-%form{:action=>"/new_image",:method=>"post",:enctype=>"multipart/form-data"}
   %p
     %label{:for=>"name"} Titre:
-    %input{:type => "text", :name => "work_title",:value=>"#{@work.titre if @work}"}
+    %input{:type => "text", :name => "work_title",:value=>"#{@post.titre if @post}"}
+    %span.erreur= @post.errors["titre"]
   %p
     %label{:for=>"name"} Description:
     %br
+    %span.erreur= @post.errors["desc"]
     %textarea{:name => "work_desc", :rows => "10"}
-      #{@work.desc if @work}
+      #{@post.desc if @post}
   %p
-    %input{:type=>"file",:name=>"file"}
-  %input{:type=>"submit",:value=>"Upload"}
-
+    %input{:type=>"file",:name=>"file", :class=>"bouton mauve btn_file"}
+    %span.erreur= @post.errors["fichier"]
+  %input{:type=>"submit",:value=>"Publier cette image", :class=>"bouton mauve"}

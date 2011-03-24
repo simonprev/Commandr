@@ -1,48 +1,59 @@
 !!! 5
 %html
   %head
-    %title Command-R
-    %script(type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js")
-    = set_tags
+    %meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
+    %meta(name="description" content="CommandR - communanté web rafraichissante")
+    %meta(name="auteur" content="@simonprevost")
+    %title #{@titre} | Command R
+    %link(rel="icon" href="/images/favicon.png" type="image/png")
+    %link(href='/css/reset.css' rel='stylesheet' type='text/css')
+    %link(href='/css/global.css' rel='stylesheet' type='text/css')
+    %link(href='http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold' rel='stylesheet' type='text/css')
+    - if @template
+      %link(href='/css/#{@template}.css' rel='stylesheet' type='text/css')
+    %script(type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js")
+    %script(type="text/javascript" src="/js/global.js")
   %body
-    %div#header
-      %h1
-        %a{:href=>"/"} Command-R
-      %ul#nav
-        %li<
-          %a{:href=>"/publication",:id=>"publication"} Publications
-        %li<
-          %a{:href=>"/code",:id=>"code"} Codes
-        %li<
-          %a{:href=>"/image",:id=>"image"} Images
-        %li<
-          %a{:href=>"/type",:id=>"type"} Types
-        %li<
-          %a{:href=>"/user",:id=>"auteur"} Auteurs
-      - if session["username"]
-        %div#menuUser
-          %p
-            %a{:href=>"/user/#{session["username"]}", :class=>"user"}=session["username"]
-            %a{:href=>"/new", :class=>"new"}<
-              Nouvelle Publication
-          %ul
-            %li<
-              %a{:href=>"/settings"}<
-                Paramètres
-            %li<
-              %a{:href=>"/logout"}<
-                Logout
+    %noscript
+      Avec le javascript désactivé, vous manquerez plusieurs fonctionnalité clés.
+    #wrapper
+      #sidebar
+        %a{:href=>"/"}<
+          %img{:src=>"/images/logo.png"}
+          %span.baseline
+            communauté web 
+            %em rafraichissante
+        %ul#nav
+          - if session["username"]
+            %li{:class=>"#{lien_actif?('feed')}"}<
+              = link_to "/feed","Fil",{:id=>"fil"}
+          %li{:class=>"#{lien_actif?('publication')}"}<
+            = link_to "/publications", "Publications", {:id=>'publications'}
+          %li{:class=>"#{lien_actif?('types')}"}<
+            = link_to "/types", "Types", {:id=>'types'}
+          %li{:class=>"#{lien_actif?('users')}"}<
+            = link_to "/users", "Auteurs", {:id=>'users'}
+        - if @self
+          #menuUser
+            = link_to "/users/"+@self.username, @self.prenom, :class=>'bt_user'
+            %ul
+              %li<
+                = link_to "/publications/new", "Nouvelle Publication", {:id=>"new"}
+              %li<
+                = link_to "/users/"+@self.username+"/parametres", "Paramètres", {:id=>"settings"}
+              %li<
+                = link_to "/logout", "Logout", {:id=>"logout"}
 
-      - unless session["username"]
-        %a{:href=>"/login", :class=>"connection"}
-          Connectez-vous!
-        ou
-        %a{:href=>"/user/new", :class=>"inscription"}
-          Inscrivez-vous!
+        - else
+          = link_to "/login", "Connectez-vous!", :class=>"connexion"
+          ou
+          = link_to "/users/new", "inscrivez-vous!", :class=>"inscription"
 
-    %div#content
-      =yield
 
-    %div#footer
-      %p
-        Copyright - © - Simon Prévost
+      #content
+        - if flash[:notice]
+          #notice
+            = flash[:notice]
+        #feed
+          =yield
+      %span{:style=>"clear:both;display:block;"}

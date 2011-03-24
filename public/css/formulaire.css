@@ -1,0 +1,67 @@
+@import url("selectbox.css");
+form.formulaire{
+  width:296px;
+}
+form.formulaire input[type="text"],form.formulaire input[type="password"], form.formulaire textarea {
+-moz-border-radius:3px;
+-moz-box-shadow:0 1px 0 #fff;
+-webkit-box-shadow:0 1px 0 #fff;
+border:1px #AAA solid;
+border-radius:3px;
+box-shadow:0 1px 0 #fff;
+padding:6px;
+width:200px;
+margin-bottom: 5px;
+margin-top: 5px;
+}
+
+form.formulaire label {
+color:#878787;
+display:inline-block;
+width:110px;
+font-size: 13px;
+}
+form.formulaire label em{
+color:#a74b4b;
+}
+
+form.formulaire input[type="text"]:focus,form.formulaire input[type="password"]:focus ,form.formulaire textarea:focus {
+-moz-box-shadow:0 1px 3px #CCC;
+-webkit-box-shadow:0 1px 3px #CCC;
+border:1px #6e56b1 solid;
+box-shadow:0 1px 3px #CCC;
+outline:none;
+}
+form.formulaire {
+clear:both;
+}
+#btnConnexion{
+margin-right: 83px;
+margin-top: 20px;
+}
+.lTextarea{
+float:left;
+margin-right: 4px;
+margin-top: 6px;
+}
+form.formulaire textarea{
+  width:314px;
+}
+
+.formulaire span.erreur{
+font-size: 11px;
+display:block;
+color:#a74b4b;
+margin-bottom:10px;
+}
+.formulaire div.erreur{
+display:inline-block;
+padding:10px;
+color:#a74b4b;
+background:#e4cece;
+border:1px solid #a74b4b;
+margin-bottom:20px;
+font-size:14px;
+}
+.formulaire span.textarea_erreur{
+}
