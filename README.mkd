@@ -5,5 +5,5 @@ Application Ruby grandement inspiré de dribbble.com et forrst.com
 
 Ceci est ma première application Ruby/Sinatra, ne soyez pas trop dur avec mon code :)
 
-[![Screenshot of MacVim.app using these files] (http://simonprevost.com/images/screenshot.PNG)]
+[![Screenshot of MacVim.app using these files] (http://simonprevost.com/images/screenshot.PNG)](http://simonprevost.com/images/screenshot.PNG)
 
